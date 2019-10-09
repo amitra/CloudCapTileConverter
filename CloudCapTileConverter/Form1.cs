@@ -82,7 +82,7 @@ namespace CloudCapTileConverter
                             }).First();
           
             string agsPayload = agUrl + "/export?bbox="+ cacheReqsExt.minLon + "%2C"+ cacheReqsExt.minLat + "%2C"+ cacheReqsExt.maxLon + "%2C"+ cacheReqsExt.maxLat + "&bboxSR=4326&layers=&layerDefs=&size=1024%2C1024&imageSR=4326&format=jpg&transparent=false&dpi=&time=&layerTimeOptions=&dynamicLayers=&gdbVersion=&mapScale=&rotation=&f=image";
-            richTextBox1.Text += agsPayload + Environment.NewLine + Environment.NewLine;
+            //richTextBox1.Text += agsPayload + Environment.NewLine + Environment.NewLine;
             GetImgAsync(agsPayload, tempFileInfo.fileHandle);
 
         }
