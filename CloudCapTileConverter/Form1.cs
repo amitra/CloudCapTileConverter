@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -35,7 +36,7 @@ namespace CloudCapTileConverter
 
             OpenFileDialog renderExcelOFD = new OpenFileDialog();
 
-            renderExcelOFD.InitialDirectory = "C:\\data\\cache_test_l7";
+            renderExcelOFD.InitialDirectory = "C:\\data\\CloudCapCache";
             renderExcelOFD.Filter = "xml files (*.xml)|*xml|ossim session files (*.session)|*.session|All files (*.*)|*.*";
             renderExcelOFD.FilterIndex = 1;
             renderExcelOFD.RestoreDirectory = true;
@@ -63,7 +64,11 @@ namespace CloudCapTileConverter
             List<FileRequestInfo> cacheRequests =  cacheReqs.ToList<FileRequestInfo>();
             richTextBox1.Text += "Index file processed. We will now process " + cacheRequests.Count.ToString() + " entries." + Environment.NewLine+ Environment.NewLine;
 
-            foreach(var req in cacheRequests) {
+            //set thread pool and concurrent request limit
+            ThreadPool.SetMinThreads(10, 4);
+            System.Net.ServicePointManager.DefaultConnectionLimit = 10;
+
+            foreach (var req in cacheRequests) {
                 runArcgisRequest(req);
             }
         }
@@ -100,7 +105,7 @@ namespace CloudCapTileConverter
                     await webClient.DownloadFileTaskAsync(new Uri(uri), @downloadToDirectory);                   
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 richTextBox1.Text += "Failed to download File: " + fileInfo;
             }
